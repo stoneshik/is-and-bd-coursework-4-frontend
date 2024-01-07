@@ -13,10 +13,10 @@ export default function Home() {
                     <div className="form-row">
                         <h1>Вендинг печати и сканирования</h1>
                         <div id="button_wrapper" className="container">
-                            <NavLink to="register">
+                            <NavLink to="/register">
                                 <div id="button_first" className="button">Начать пользоваться</div>
                             </NavLink>
-                            <NavLink to="login">
+                            <NavLink to="/login">
                                 <div id="button_second" className="button">Уже есть аккаунт</div>
                             </NavLink>
                         </div>

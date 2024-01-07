@@ -34,7 +34,7 @@ export default function Register() {
                             <span>Я согласен(на) с <br/><Link to="#">условиями пользования</Link></span>
                         </div>
                     </form>
-                    <form action={"login"} className="ui-form second-form">
+                    <form action={"/login"} className="ui-form second-form">
                         <input type="submit" value="Войти"/>
                     </form>
                 </div>

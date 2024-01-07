@@ -1,18 +1,16 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './components/without_authorized/page/Home';
-import Login from './components/without_authorized/page/Login';
-import Register from './components/without_authorized/page/Register';
+import { Route, Routes } from "react-router-dom";
+import Home from "./components/without_authorized/page/Home";
+import Login from "./components/without_authorized/page/Login";
+import Register from "./components/without_authorized/page/Register";
 
 export default function App() {
     return (
-        <Router>
-            <Routes>
-                {/* Страницы для неавторизованного пользователя */}
-                <Route exact path="/" element={<Home/>}/>
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/register" element={<Register/>}/>
-                {/* Страницы для авторизованного пользователя */}
-            </Routes>
-        </Router>
+        <Routes>
+            {/* Страницы для неавторизованного пользователя */}
+            <Route exact path="/" element={<Home/>}/>
+            <Route path="/login" element={<Login/>}/>
+            <Route path="/register" element={<Register/>}/>
+            {/* Страницы для авторизованного пользователя */}
+        </Routes>
     )
 }

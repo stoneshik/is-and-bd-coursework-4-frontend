@@ -25,7 +25,7 @@ export default function Login() {
                         <input type="submit" value="Войти"/>
                         <Link to="forgot_password_email" id="forgot-password">Забыли пароль?</Link>
                     </form>
-                    <form action={"register"} className="ui-form second-form">
+                    <form action={"/register"} className="ui-form second-form">
                         <input type="submit" value="Зарегистрироваться"/>
                     </form>
                 </div>
