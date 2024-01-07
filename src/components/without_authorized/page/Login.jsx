@@ -10,6 +10,14 @@ export function Login() {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const changeHandling = (event, functionForSetValue) => {
+        functionForSetValue(event.target.value);
+        if (event.target.value) {
+            event.target.classList.add('inputting_field');
+        } else {
+            event.target.classList.remove('inputting_field');
+        }
+    };
     const formHandling = (event) => {
         event.preventDefault();
         if (!login) {
@@ -53,13 +61,13 @@ export function Login() {
                         <div className="form-row">
                             <input type="text" id="login-field" required autoComplete="off"
                                    name="login"
-                                   onChange={(e) => setLogin(e.target.value)}/>
+                                   onChange={(e) => changeHandling(e, setLogin)}/>
                             <label htmlFor="login-field" className="text-input-label">Логин:</label>
                         </div>
                         <div className="form-row">
                             <input type="password" id="password-field" required autoComplete="off"
                                    name="password"
-                                   onChange={(e) => setPassword(e.target.value)}/>
+                                   onChange={(e) => changeHandling(e, setPassword)}/>
                             <label htmlFor="password-field" className="text-input-label">Пароль:</label>
                         </div>
                         <input type="submit" value="Войти"/>
