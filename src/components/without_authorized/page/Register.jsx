@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 
-import Header from "../header/Header";
-import Footer from "../footer/Footer";
+import { Header } from "../header/Header";
+import { Footer } from "../footer/Footer";
 
 
-export default function Register() {
+export function Register() {
     const formHandling = (formData) => {
 
     }
