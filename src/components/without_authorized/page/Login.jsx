@@ -32,6 +32,15 @@ export function Login() {
             setErrorMessage('Длина пароля должна быть более 5 символов');
             return false;
         }
+        const regex = new RegExp('[a-zA-Z0-9]+');
+        if (!regex.test(login)) {
+            setErrorMessage('Логин должен быть написан латинскими буквами,\nмогут использоваться цифры');
+            return false;
+        }
+        if (!regex.test(password)) {
+            setErrorMessage('Пароль должен быть написан латинскими буквами,\nмогут использоваться цифры');
+            return false;
+        }
         setErrorMessage('');
         return navigate('/main');
     };
@@ -44,14 +53,12 @@ export function Login() {
                         <div className="form-row">
                             <input type="text" id="login-field" required autoComplete="off"
                                    name="login"
-                                   value={login}
                                    onChange={(e) => setLogin(e.target.value)}/>
                             <label htmlFor="login-field" className="text-input-label">Логин:</label>
                         </div>
                         <div className="form-row">
                             <input type="password" id="password-field" required autoComplete="off"
                                    name="password"
-                                   value={password}
                                    onChange={(e) => setPassword(e.target.value)}/>
                             <label htmlFor="password-field" className="text-input-label">Пароль:</label>
                         </div>
