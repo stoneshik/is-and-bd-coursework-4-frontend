@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
@@ -69,7 +69,6 @@ export function Login() {
                             <label htmlFor="password-field" className="text-input-label">Пароль:</label>
                         </div>
                         <input type="submit" value="Войти"/>
-                        <Link to="forgot_password_email" id="forgot-password">Забыли пароль?</Link>
                         <div className="error">{errorMessage}</div>
                     </form>
                     <form action={"/register"} className="ui-form second-form">

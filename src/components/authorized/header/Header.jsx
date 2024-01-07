@@ -15,7 +15,7 @@ export function Header() {
                         <div className="description">аккаунт</div>
                         <div className="hamburger-wrapper">
                             <ul>
-                                <li><Link id="login" to="#"></Link></li>
+                                <li><Link id="login" to="#">sus</Link></li>
                                 <li><Link to="#">1337,00р</Link></li>
                                 <li><Link to="#">пополнить счет</Link></li>
                                 <li><Link to="/personal_account">личный кабинет</Link></li>
