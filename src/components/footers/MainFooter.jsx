@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 
 
-export const MainFooter = () => {
+export default function MainFooter() {
     return (
         <div id="footer" className="container">
             <div className="column">

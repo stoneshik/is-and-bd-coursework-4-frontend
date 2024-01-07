@@ -4,7 +4,7 @@ import MainHeader from "../headers/MainHeader";
 import MainFooter from "../footers/MainFooter";
 
 
-export default function Home() {
+export default function Register() {
     return (
         <div>
             <MainHeader/>
