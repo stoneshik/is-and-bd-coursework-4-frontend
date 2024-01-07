@@ -1,6 +1,7 @@
+import { NavLink } from "react-router-dom";
+
 import { MainHeader } from "../headers/MainHeader";
 import { MainFooter } from "../footers/MainFooter";
-import { NavLink } from "react-router-dom";
 
 
 const Home = () => {
