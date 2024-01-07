@@ -12,5 +12,5 @@ export default function App() {
             <Route path="/register" element={<Register/>}/>
             {/* Страницы для авторизованного пользователя */}
         </Routes>
-    )
+    );
 }

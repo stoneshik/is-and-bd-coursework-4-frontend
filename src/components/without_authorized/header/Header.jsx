@@ -1,10 +1,10 @@
-import { NavLink } from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 
 
 export default function Header() {
     return (
         <div id="header" className="container">
-            <div className="container"><NavLink to="/" className="none-underline"><h2>TypoFast</h2></NavLink></div>
+            <div className="container"><Link to="/" className="none-underline"><h2>TypoFast</h2></Link></div>
             <div className="container">
                 <ul className="menu row">
                     <li><NavLink to="/about">о нас</NavLink></li>

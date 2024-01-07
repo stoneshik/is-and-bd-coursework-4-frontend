@@ -31,5 +31,5 @@ export default function Footer() {
                 <h4>Email: info@typofast.ru</h4>
             </div>
         </div>
-    )
+    );
 }
