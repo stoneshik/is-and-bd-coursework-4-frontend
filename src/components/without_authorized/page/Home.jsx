@@ -1,13 +1,13 @@
 import { NavLink } from "react-router-dom";
 
-import MainHeader from "../headers/MainHeader";
-import MainFooter from "../footers/MainFooter";
+import Header from "../header/Header";
+import Footer from "../footer/Footer";
 
 
 export default function Home() {
     return (
         <div>
-            <MainHeader/>
+            <Header/>
             <div id="wrapper_index_page">
                 <div id="index_page_header">
                     <div className="form-row">
@@ -42,7 +42,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <MainFooter/>
+            <Footer/>
         </div>
     );
 }

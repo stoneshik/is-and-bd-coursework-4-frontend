@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
-import MainHeader from "../headers/MainHeader";
-import MainFooter from "../footers/MainFooter";
+import Header from "../header/Header";
+import Footer from "../footer/Footer";
 
 
 export default function Register() {
@@ -10,7 +10,7 @@ export default function Register() {
     }
     return (
         <div>
-            <MainHeader/>
+            <Header/>
             <div id="wrapper" className="container">
                 <div>
                     <form action={formHandling} className="ui-form main-form" id="register_form">
@@ -39,7 +39,7 @@ export default function Register() {
                     </form>
                 </div>
             </div>
-            <MainFooter/>
+            <Footer/>
         </div>
     );
 }

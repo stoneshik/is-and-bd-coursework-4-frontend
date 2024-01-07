@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 
-export default function MainHeader() {
+export default function Header() {
     return (
         <div id="header" className="container">
             <div className="container"><NavLink to="index" className="none-underline"><h2>TypoFast</h2></NavLink></div>
