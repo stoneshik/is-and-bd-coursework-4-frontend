@@ -18,8 +18,8 @@ export function Footer() {
                 <ul className="menu menu-column">
                     <li><NavLink to="#">О нас</NavLink></li>
                     <li><NavLink to="#">Помощь</NavLink></li>
-                    <li><NavLink exact to="/map_without_login">Мы на карте</NavLink></li>
-                    <li><NavLink exact to="/login">Вход</NavLink></li>
+                    <li><NavLink to="/map_without_login">Мы на карте</NavLink></li>
+                    <li><NavLink to="/login">Вход</NavLink></li>
                 </ul>
             </div>
             <div className="column">

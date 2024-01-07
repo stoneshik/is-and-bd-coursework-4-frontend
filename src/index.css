@@ -166,7 +166,7 @@ form .form-row .inputting_field+label {
 }
 .error {
   color: #CC0000;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 300;
   text-align: center;
 }
