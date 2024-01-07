@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
@@ -13,12 +13,12 @@ export function Home() {
                     <div className="form-row">
                         <h1>Вендинг печати и сканирования</h1>
                         <div id="button_wrapper" className="container">
-                            <NavLink to="/register">
+                            <Link to="/register">
                                 <div id="button_first" className="button">Начать пользоваться</div>
-                            </NavLink>
-                            <NavLink to="/login">
+                            </Link>
+                            <Link to="/login">
                                 <div id="button_second" className="button">Уже есть аккаунт</div>
-                            </NavLink>
+                            </Link>
                         </div>
                     </div>
                 </div>

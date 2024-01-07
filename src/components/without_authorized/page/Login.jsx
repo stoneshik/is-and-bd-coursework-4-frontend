@@ -18,16 +18,9 @@ export function Login() {
             event.target.classList.remove('inputting_field');
         }
     };
-    const formHandling = (event) => {
-        event.preventDefault();
-        if (!login) {
-            setErrorMessage('Введите логин');
-            return false;
-        }
-        if (!password) {
-            setErrorMessage('Введите пароль');
-            return false;
-        }
+    const validateForm = () => {
+        if (!login) {setErrorMessage('Введите логин'); return false;}
+        if (!password) {setErrorMessage('Введите пароль'); return false;}
         if (login.length > 15) {
             setErrorMessage('Длина логина не должна превышать 15 символов');
             return false;
@@ -42,14 +35,19 @@ export function Login() {
         }
         const regex = new RegExp('[a-zA-Z0-9]+');
         if (!regex.test(login)) {
-            setErrorMessage('Логин должен быть написан латинскими буквами,\nмогут использоваться цифры');
+            setErrorMessage('Логин должен быть написан латинскими буквами, могут использоваться цифры');
             return false;
         }
         if (!regex.test(password)) {
-            setErrorMessage('Пароль должен быть написан латинскими буквами,\nмогут использоваться цифры');
+            setErrorMessage('Пароль должен быть написан латинскими буквами,могут использоваться цифры');
             return false;
         }
         setErrorMessage('');
+        return true;
+    };
+    const formHandling = (event) => {
+        event.preventDefault();
+        if (!validateForm()) {return false;}
         return navigate('/main');
     };
     return (
