@@ -71,7 +71,7 @@ export function Login() {
                         <input type="submit" value="Войти"/>
                         <div className="error">{errorMessage}</div>
                     </form>
-                    <form action={"/register"} className="ui-form second-form">
+                    <form className="ui-form second-form" onSubmit={() => navigate('/register')}>
                         <input type="submit" value="Зарегистрироваться"/>
                     </form>
                 </div>

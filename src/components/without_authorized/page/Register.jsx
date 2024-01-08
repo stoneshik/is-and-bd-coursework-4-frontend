@@ -92,7 +92,7 @@ export function Register() {
                         </div>
                         <div className="error">{errorMessage}</div>
                     </form>
-                    <form action={"/login"} className="ui-form second-form">
+                    <form className="ui-form second-form" onSubmit={() => navigate('/login')}>
                         <input type="submit" value="Войти"/>
                     </form>
                 </div>
