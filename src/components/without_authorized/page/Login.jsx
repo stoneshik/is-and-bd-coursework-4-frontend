@@ -6,10 +6,12 @@ import { Footer } from "../footer/Footer";
 
 
 export function Login() {
+    const superagent = require('superagent');
     const navigate = useNavigate();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const changeHandling = (event, functionForSetValue) => {
         functionForSetValue(event.target.value);
         if (event.target.value) {
@@ -18,19 +20,25 @@ export function Login() {
             event.target.classList.remove('inputting_field');
         }
     };
-    const validateForm = () => {
-        if (!login) {setErrorMessage('Введите логин'); return false;}
-        if (!password) {setErrorMessage('Введите пароль'); return false;}
+    const validateForm = async () => {
+        if (!login) {
+            setErrorMessage('Введите логин');
+            return false;
+        }
+        if (!password) {
+            setErrorMessage('Введите пароль');
+            return false;
+        }
         if (login.length > 15) {
             setErrorMessage('Длина логина не должна превышать 15 символов');
             return false;
         }
-        if (login.length < 3) {
-            setErrorMessage('Длина логина должна быть больше 2 символов');
+        if (login.length < 2) {
+            setErrorMessage('Длина логина должна быть минимум 2 символа');
             return false;
         }
-        if (password.length < 6) {
-            setErrorMessage('Длина пароля должна быть более 5 символов');
+        if (password.length < 5) {
+            setErrorMessage('Длина пароля должна быть минимум 5 символов');
             return false;
         }
         const regex = new RegExp('[a-zA-Z0-9]+');
@@ -42,13 +50,34 @@ export function Login() {
             setErrorMessage('Пароль должен быть написан латинскими буквами,могут использоваться цифры');
             return false;
         }
-        setErrorMessage('');
-        return true;
+        let isValid = false;
+        await superagent
+            .post('/api/open/auth')
+            .send({"login": login, "password": password})
+            .set('Content-Type', 'application/json')
+            .parse(({ text }) => JSON.parse(text))
+            .catch(
+                (err) => {
+                    const statusCode = parseInt(err.statusCode);
+                    if (statusCode === 404 || statusCode === 400) {
+                        setSuccessMessage('');
+                        setErrorMessage(err.rawResponse);
+                        isValid = false;
+                        return;
+                    }
+                    setErrorMessage('');
+                    setSuccessMessage(err.rawResponse);
+                    isValid = true;
+                }
+            );
+        return isValid;
     };
-    const formHandling = (event) => {
+    const formHandling = async (event) => {
         event.preventDefault();
-        if (!validateForm()) {return false;}
-        return navigate('/main');
+        if (!await validateForm()) {
+            return false;
+        }
+        navigate('/main');
     };
     return (
         <div>
@@ -70,6 +99,7 @@ export function Login() {
                         </div>
                         <input type="submit" value="Войти"/>
                         <div className="error">{errorMessage}</div>
+                        <div className="success-text">{successMessage}</div>
                     </form>
                     <form className="ui-form second-form" onSubmit={() => navigate('/register')}>
                         <input type="submit" value="Зарегистрироваться"/>

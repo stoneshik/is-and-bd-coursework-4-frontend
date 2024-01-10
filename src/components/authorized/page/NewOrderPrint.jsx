@@ -55,7 +55,7 @@ export function NewOrderPrint() {
                         style={{color: '#eee', fontSize: '12px', position: 'absolute', top: '14px'}}>Карта
                         Санкт-Петербурга с улицами и номерами домов — Яндекс Карты</a>
                         <iframe src="https://yandex.ru/map-widget/v1/?ll=30.315635%2C59.938951&z=11" width="800"
-                                height="500" frameBorder="0" allowFullScreen="true"
+                                height="500" frameBorder="0" allowFullScreen="true" title="map"
                                 style={{position: 'relative'}}></iframe>
                     </div>
                 </div>

@@ -170,6 +170,12 @@ form .form-row .inputting_field+label {
   font-weight: 300;
   text-align: center;
 }
+.success-text {
+  color: #339966;
+  font-size: 14px;
+  font-weight: 300;
+  text-align: center;
+}
 
 .custom-fieldset {
   margin-bottom: 20px;
