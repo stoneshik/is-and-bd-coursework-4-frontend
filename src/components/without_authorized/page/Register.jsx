@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
+import superagent from "superagent";
 
 
 export function Register() {
@@ -12,6 +13,7 @@ export function Register() {
     const [password, setPassword] = useState('');
     const [agreement, setAgreement] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const changeHandling = (event, functionForSetValue) => {
         functionForSetValue(event.target.value);
         if (event.target.value) {
@@ -23,7 +25,7 @@ export function Register() {
     const changeCheckboxHandling = (event, functionForSetValue) => {
         functionForSetValue(event.target.checked);
     };
-    const validateForm = () => {
+    const validateForm = async () => {
         if (!email) {setErrorMessage('Введите почту'); return false;}
         if (!login) {setErrorMessage('Введите логин'); return false;}
         if (!password) {setErrorMessage('Введите пароль'); return false;}
@@ -31,12 +33,12 @@ export function Register() {
             setErrorMessage('Длина логина не должна превышать 15 символов');
             return false;
         }
-        if (login.length < 3) {
-            setErrorMessage('Длина логина должна быть больше 2 символов');
+        if (login.length < 2) {
+            setErrorMessage('Длина логина должна быть минимум 2 символа');
             return false;
         }
-        if (password.length < 6) {
-            setErrorMessage('Длина пароля должна быть более 5 символов');
+        if (password.length < 5) {
+            setErrorMessage('Длина пароля должна быть минимум 5 символов');
             return false;
         }
         if (!agreement) {setErrorMessage('Чтобы продолжить вы должны принять соглашение'); return false;}
@@ -49,12 +51,31 @@ export function Register() {
             setErrorMessage('Пароль должен быть написан латинскими буквами, могут использоваться цифры');
             return false;
         }
-        setErrorMessage('');
-        return true;
+        let isValid = false;
+        await superagent
+            .post('/api/open/register')
+            .send({"email": email, "login": login, "password": password})
+            .set('Content-Type', 'application/json')
+            .parse(({ text }) => JSON.parse(text))
+            .catch(
+                (err) => {
+                    const statusCode = parseInt(err.statusCode);
+                    if (statusCode === 404 || statusCode === 400) {
+                        setSuccessMessage('');
+                        setErrorMessage(err.rawResponse);
+                        isValid = false;
+                        return;
+                    }
+                    setErrorMessage('');
+                    setSuccessMessage(err.rawResponse);
+                    isValid = true;
+                }
+            );
+        return isValid;
     };
-    const formHandling = (event) => {
+    const formHandling = async (event) => {
         event.preventDefault();
-        if (!validateForm()) {return false;}
+        if (!await validateForm()) {return false;}
         return navigate('/main');
     };
     return (
@@ -91,6 +112,7 @@ export function Register() {
                             <span>Я согласен(на) с <br/><Link to="#">условиями пользования</Link></span>
                         </div>
                         <div className="error">{errorMessage}</div>
+                        <div className="success-text">{successMessage}</div>
                     </form>
                     <form className="ui-form second-form" onSubmit={() => navigate('/login')}>
                         <input type="submit" value="Войти"/>
