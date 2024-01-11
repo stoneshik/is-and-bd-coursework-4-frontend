@@ -55,19 +55,27 @@ export function Login() {
             .post('/api/open/auth')
             .send({"login": login, "password": password})
             .set('Content-Type', 'application/json')
-            .parse(({ text }) => JSON.parse(text))
-            .catch(
-                (err) => {
-                    const statusCode = parseInt(err.statusCode);
-                    if (statusCode === 404 || statusCode === 400) {
-                        setSuccessMessage('');
-                        setErrorMessage(err.rawResponse);
+            .then(
+                (result) => {
+                    setErrorMessage('');
+                    const responseMessage = result.body['responseMessage'];
+                    if (responseMessage === undefined) {
                         isValid = false;
                         return;
                     }
-                    setErrorMessage('');
-                    setSuccessMessage(err.rawResponse);
+                    setSuccessMessage(responseMessage);
                     isValid = true;
+                }
+            )
+            .catch(
+                (err) => {
+                    isValid = false;
+                    setSuccessMessage('');
+                    const responseMessage = err.response.body['responseMessage'];
+                    if (responseMessage === undefined) {
+                        return;
+                    }
+                    setErrorMessage(responseMessage);
                 }
             );
         return isValid;
