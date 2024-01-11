@@ -1,12 +1,13 @@
+import superagent from "superagent";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
+import { responseMessageHandlerForFormError, responseMessageHandlerForFormResult } from "../../../responseHandlers";
 
 
 export function Login() {
-    const superagent = require('superagent');
     const navigate = useNavigate();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
@@ -57,25 +58,12 @@ export function Login() {
             .set('Content-Type', 'application/json')
             .then(
                 (result) => {
-                    setErrorMessage('');
-                    const responseMessage = result.body['responseMessage'];
-                    if (responseMessage === undefined) {
-                        isValid = false;
-                        return;
-                    }
-                    setSuccessMessage(responseMessage);
-                    isValid = true;
+                    isValid = responseMessageHandlerForFormResult(result, setErrorMessage, setErrorMessage);
                 }
             )
             .catch(
                 (err) => {
-                    isValid = false;
-                    setSuccessMessage('');
-                    const responseMessage = err.response.body['responseMessage'];
-                    if (responseMessage === undefined) {
-                        return;
-                    }
-                    setErrorMessage(responseMessage);
+                    isValid = responseMessageHandlerForFormError(err, setErrorMessage, setSuccessMessage);
                 }
             );
         return isValid;

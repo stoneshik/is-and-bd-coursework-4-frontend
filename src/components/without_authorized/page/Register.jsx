@@ -1,9 +1,10 @@
+import superagent from "superagent";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
-import superagent from "superagent";
+import { responseMessageHandlerForFormError, responseMessageHandlerForFormResult } from "../../../responseHandlers";
 
 
 export function Register() {
@@ -56,19 +57,14 @@ export function Register() {
             .post('/api/open/register')
             .send({"email": email, "login": login, "password": password})
             .set('Content-Type', 'application/json')
-            .parse(({ text }) => JSON.parse(text))
+            .then(
+                (result) => {
+                    isValid = responseMessageHandlerForFormResult(result, setErrorMessage, setErrorMessage);
+                }
+            )
             .catch(
                 (err) => {
-                    const statusCode = parseInt(err.statusCode);
-                    if (statusCode === 404 || statusCode === 400) {
-                        setSuccessMessage('');
-                        setErrorMessage(err.rawResponse);
-                        isValid = false;
-                        return;
-                    }
-                    setErrorMessage('');
-                    setSuccessMessage(err.rawResponse);
-                    isValid = true;
+                    isValid = responseMessageHandlerForFormError(err, setErrorMessage, setSuccessMessage);
                 }
             );
         return isValid;
@@ -76,7 +72,7 @@ export function Register() {
     const formHandling = async (event) => {
         event.preventDefault();
         if (!await validateForm()) {return false;}
-        return navigate('/main');
+        return navigate('/login');
     };
     return (
         <div>
