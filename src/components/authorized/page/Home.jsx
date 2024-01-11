@@ -9,6 +9,7 @@ import { Footer } from "../footer/Footer";
 export function Home() {
     const [errorMessage, setErrorMessage] = useState('');
     const [orders, setOrders] = useState([]);
+    const [updateVar, setUpdate] = useState(0);
     useEffect(() => {
         superagent
             .get('/api/order/get_paid')
@@ -33,6 +34,20 @@ export function Home() {
                 }
             )
     }, []);
+    const removeRow = (orderNum) => {
+        const result = window.confirm("Вы уверены что хотите удалить заказ?");
+        if (!result) {
+            return;
+        }
+        for (let i = 0; i < orders.length; i++) {
+            const order = orders[i];
+            if (order['orderNum'] === orderNum) {
+                orders.splice(i, 1);
+                setUpdate(updateVar + 1);
+                return;
+            }
+        }
+    };
     const createRowTable = (order) => {
         const orderNum = order['orderNum'];
         const orderType = order['orderType'];
@@ -57,7 +72,8 @@ export function Home() {
                 <td>{orderAmount} руб.</td>
                 <td className="address">{orderAddress}</td>
                 <td>
-                    <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}} onClick="remove(this);"/>
+                    <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                         onClick={() => removeRow(orderNum)}/>
                 </td>
             </tr>
         );
