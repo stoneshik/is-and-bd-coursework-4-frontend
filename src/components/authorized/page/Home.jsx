@@ -1,10 +1,67 @@
-import { NavLink } from "react-router-dom";
+import superagent from "superagent";
+import { useEffect, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
 
 
 export function Home() {
+    const [errorMessage, setErrorMessage] = useState('');
+    const [orders, setOrders] = useState([]);
+    useEffect(() => {
+        superagent
+            .get('/api/order/get_paid')
+            .set('Content-Type', 'application/json')
+            .then((result) => {
+                    const responseOrders = result.body;
+                    if (responseOrders === undefined) {
+                        return false;
+                    }
+                    setErrorMessage('');
+                    setOrders(responseOrders);
+                    return true;
+                }
+            )
+            .catch((err) => {
+                    const responseMessage = err.response.body['responseMessage'];
+                    if (responseMessage === undefined) {
+                        return false;
+                    }
+                    setErrorMessage(responseMessage);
+                    return false;
+                }
+            )
+    }, []);
+    const createRowTable = (order) => {
+        const orderNum = order['orderNum'];
+        const orderType = order['orderType'];
+        const orderDate = order['orderDatetime'];
+        const orderAmount = order['orderAmount'];
+        const orderAddress = order['orderAddress'];
+        if (orderNum === undefined ||
+            orderType === undefined ||
+            orderDate === undefined ||
+            orderAmount === undefined ||
+            orderAddress === undefined) {
+            return;
+        }
+        const orderTypeString = (orderType === 'PRINT')? 'печать': 'сканирование';
+        return (
+            <tr>
+                <td className="num">
+                    <Link to={"/order_print/" + orderNum} title="Подробнее о заказе">{orderNum}</Link>
+                </td>
+                <td>{orderTypeString}</td>
+                <td>{orderDate}</td>
+                <td>{orderAmount} руб.</td>
+                <td className="address">{orderAddress}</td>
+                <td>
+                    <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}} onClick="remove(this);"/>
+                </td>
+            </tr>
+        );
+    };
     return (
         <div>
             <Header/>
@@ -18,13 +75,14 @@ export function Home() {
                                 <th>Номер заказа</th>
                                 <th>Тип заказа</th>
                                 <th>Дата заказа</th>
-                                <th>Осталось</th>
                                 <th>Сумма заказа</th>
                                 <th>Адрес</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
+                            {errorMessage}
+                            {orders.map(order => (createRowTable(order)))}
                             </tbody>
                         </table>
                     </div>
