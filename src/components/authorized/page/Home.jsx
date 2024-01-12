@@ -32,7 +32,7 @@ export function Home() {
                     setErrorMessage(responseMessage);
                     return false;
                 }
-            )
+            );
     }, []);
     const removeRow = (orderNum) => {
         const result = window.confirm("Вы уверены что хотите удалить заказ?");

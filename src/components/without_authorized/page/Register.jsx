@@ -72,7 +72,7 @@ export function Register() {
     const formHandling = async (event) => {
         event.preventDefault();
         if (!await validateForm()) {return false;}
-        return navigate('/login');
+        navigate('/login');
     };
     return (
         <div>

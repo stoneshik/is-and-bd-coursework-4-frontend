@@ -35,7 +35,7 @@ export function Cart() {
                     setErrorMessage(responseMessage);
                     return false;
                 }
-            )
+            );
     }, []);
     const updateChecked = (orderNum, orderAmount) => {
         checkedOrders[orderNum] = !checkedOrders[orderNum];

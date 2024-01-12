@@ -1,9 +1,10 @@
-import {useEffect, useState} from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import superagent from "superagent";
-
+import Cookies from "js-cookie";
 
 export function Header() {
+    const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
     const [login, setLogin] = useState('');
     const [balance, setBalance] = useState(0.0);
@@ -31,8 +32,28 @@ export function Header() {
                     setErrorMessage(responseMessage);
                     return false;
                 }
-            )
+            );
     }, []);
+    const logout = async () => {
+        await superagent
+            .post('/api/logout')
+            .set('Content-Type', 'application/json')
+            .then((result) => {return true;})
+            .catch((err) => {
+                    const responseMessage = err.response.body['responseMessage'];
+                    if (responseMessage === undefined) {
+                        return false;
+                    }
+                    setErrorMessage(responseMessage);
+                    return false;
+                }
+            );
+        const jsessionId = 'JSESSIONID';
+        if (Cookies.get(jsessionId)) {
+            Cookies.remove(jsessionId);
+        }
+        navigate('/');
+    };
     return (
         <div id="header" className="container">
             <div className="container"><Link to="/main" className="none-underline"><h2>TypoFast</h2></Link></div>
@@ -50,7 +71,7 @@ export function Header() {
                                 <li><Link to="#">{errorMessage}{balance} руб.</Link></li>
                                 <li><Link to="#">пополнить счет</Link></li>
                                 <li><Link to="/personal_account">личный кабинет</Link></li>
-                                <li><Link to="/">выйти</Link></li>
+                                <li><Link to="#" onClick={logout}>выйти</Link></li>
                             </ul>
                         </div>
                     </li>
