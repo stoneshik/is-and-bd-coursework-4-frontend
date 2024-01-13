@@ -123,7 +123,7 @@ export function Cart() {
             }
             removeRow(orderNum, orderAmount);
         }
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 1000);
     };
     const createRowTable = (order) => {
         const orderNum = order['orderNum'];
