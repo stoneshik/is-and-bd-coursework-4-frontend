@@ -60,12 +60,28 @@ export function Cart() {
             }
         }
     };
-    const handlingRemoveRow = (orderNum, orderAmount) => {
+    const handlingRemoveRow = async (orderNum, orderAmount, orderId) => {
         const result = window.confirm("Вы уверены что хотите удалить заказ?");
         if (!result) {
             return;
         }
         removeRow(orderNum, orderAmount);
+        let isValid = false;
+        await superagent
+            .delete('/api/order/remove/' + orderId)
+            .set('Content-Type', 'application/json')
+            .then((result) => {
+                    isValid = responseMessageHandlerForFormResult(result, setErrorMessage, setSuccessMessage);
+                }
+            )
+            .catch((err) => {
+                    isValid =responseMessageHandlerForFormError(err, setErrorMessage, setSuccessMessage);
+                }
+            );
+        if (!isValid) {
+            return;
+        }
+        setTimeout(() => window.location.reload(), 1000);
     };
     const getCheckedOrders = () => {
         const handlingOrderNums = [];
@@ -126,12 +142,14 @@ export function Cart() {
         setTimeout(() => window.location.reload(), 1000);
     };
     const createRowTable = (order) => {
+        const orderId = order['orderId'];
         const orderNum = order['orderNum'];
         const orderType = order['orderType'];
         const orderDate = order['orderDatetime'];
         const orderAmount = order['orderAmount'];
         const orderAddress = order['orderAddress'];
-        if (orderNum === undefined ||
+        if (orderId === undefined ||
+            orderNum === undefined ||
             orderType === undefined ||
             orderDate === undefined ||
             orderAmount === undefined ||
@@ -155,7 +173,7 @@ export function Cart() {
                 <td className="address">{orderAddress}</td>
                 <td>
                     <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
-                         onClick={() => handlingRemoveRow(orderNum, orderAmount)}/>
+                         onClick={() => handlingRemoveRow(orderNum, orderAmount, orderId)}/>
                 </td>
             </tr>
         );

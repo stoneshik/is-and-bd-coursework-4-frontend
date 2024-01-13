@@ -4,10 +4,12 @@ import { Link, NavLink } from "react-router-dom";
 
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
+import {responseMessageHandlerForFormError, responseMessageHandlerForFormResult} from "../../../responseHandlers";
 
 
 export function Home() {
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [orders, setOrders] = useState([]);
     const [updateVar, setUpdate] = useState(0);
     useEffect(() => {
@@ -34,7 +36,7 @@ export function Home() {
                 }
             );
     }, []);
-    const removeRow = (orderNum) => {
+    const removeRow = async (orderNum, orderId) => {
         const result = window.confirm("Вы уверены что хотите удалить заказ?");
         if (!result) {
             return;
@@ -44,11 +46,28 @@ export function Home() {
             if (order['orderNum'] === orderNum) {
                 orders.splice(i, 1);
                 setUpdate(updateVar + 1);
-                return;
+                break;
             }
         }
+        let isValid = false;
+        await superagent
+            .delete('/api/order/remove/' + orderId)
+            .set('Content-Type', 'application/json')
+            .then((result) => {
+                    isValid = responseMessageHandlerForFormResult(result, setErrorMessage, setSuccessMessage);
+                }
+            )
+            .catch((err) => {
+                    isValid =responseMessageHandlerForFormError(err, setErrorMessage, setSuccessMessage);
+                }
+            );
+        if (!isValid) {
+            return;
+        }
+        setTimeout(() => window.location.reload(), 1000);
     };
     const createRowTable = (order) => {
+        const orderId = order['orderId'];
         const orderNum = order['orderNum'];
         const orderType = order['orderType'];
         const orderDate = order['orderDatetime'];
@@ -73,7 +92,7 @@ export function Home() {
                 <td className="address">{orderAddress}</td>
                 <td>
                     <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
-                         onClick={() => removeRow(orderNum)}/>
+                         onClick={() => removeRow(orderNum, orderId)}/>
                 </td>
             </tr>
         );
@@ -97,10 +116,11 @@ export function Home() {
                             </tr>
                             </thead>
                             <tbody>
-                            {errorMessage}
                             {orders.map(order => (createRowTable(order)))}
                             </tbody>
                         </table>
+                        <div className="error">{errorMessage}</div>
+                        <div className="success-text">{successMessage}</div>
                     </div>
                     <div>
                         <h2>Новый заказ</h2>
