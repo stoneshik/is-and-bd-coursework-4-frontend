@@ -59,7 +59,7 @@ export function Register() {
             .set('Content-Type', 'application/json')
             .then(
                 (result) => {
-                    isValid = responseMessageHandlerForFormResult(result, setErrorMessage, setErrorMessage);
+                    isValid = responseMessageHandlerForFormResult(result, setErrorMessage, setSuccessMessage);
                 }
             )
             .catch(

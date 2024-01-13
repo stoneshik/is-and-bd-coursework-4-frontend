@@ -2,13 +2,14 @@ import superagent from "superagent";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
+import { responseMessageHandlerForFormError, responseMessageHandlerForFormResult } from "../../../responseHandlers";
 
 
 export function Cart() {
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [orders, setOrders] = useState([]);
     const [checkedOrders] = useState({});
     const [amount, setAmount] = useState(0.0);
@@ -46,10 +47,6 @@ export function Cart() {
         setAmount(amount - orderAmount);
     };
     const removeRow = (orderNum, orderAmount) => {
-        const result = window.confirm("Вы уверены что хотите удалить заказ?");
-        if (!result) {
-            return;
-        }
         for (let i = 0; i < orders.length; i++) {
             const order = orders[i];
             if (order['orderNum'] === orderNum) {
@@ -62,6 +59,71 @@ export function Cart() {
                 return;
             }
         }
+    };
+    const handlingRemoveRow = (orderNum, orderAmount) => {
+        const result = window.confirm("Вы уверены что хотите удалить заказ?");
+        if (!result) {
+            return;
+        }
+        removeRow(orderNum, orderAmount);
+    };
+    const getCheckedOrders = () => {
+        const handlingOrderNums = [];
+        for (const [orderNum, isChecked] of Object.entries(checkedOrders)) {
+            if (isChecked) {
+                handlingOrderNums.push(orderNum);
+            }
+        }
+        const handlingOrders = []
+        for (let i = 0; i < orders.length; i++) {
+            const order = orders[i];
+            const orderNum = order['orderNum'];
+            if (orderNum === undefined) {
+                return [];
+            }
+            for (let j = 0; j < handlingOrderNums.length; i++) {
+                const handlingOrderNum = handlingOrderNums[j];
+                if (String(orderNum) === String(handlingOrderNum)) {
+                    handlingOrders.push(order);
+                    break;
+                }
+            }
+        }
+        return handlingOrders;
+    };
+    const handlingPay = async () => {
+        const handlingOrders = getCheckedOrders();
+        if (handlingOrders.length < 1) {
+            return;
+        }
+        let isValid = false;
+        await superagent
+            .post('/api/order/pay')
+            .send(handlingOrders)
+            .set('Content-Type', 'application/json')
+            .then(
+                (result) => {
+                    isValid = responseMessageHandlerForFormResult(result, setErrorMessage, setSuccessMessage);
+                }
+            )
+            .catch(
+                (err) => {
+                    isValid = responseMessageHandlerForFormError(err, setErrorMessage, setSuccessMessage);
+                }
+            );
+        if (!isValid) {
+            return;
+        }
+        for (let i = 0; i < handlingOrders.length; i++) {
+            const handlingOrder = handlingOrders[i];
+            const orderNum = handlingOrder['orderNum'];
+            const orderAmount = handlingOrder['orderAmount'];
+            if (orderNum === undefined || orderAmount === undefined) {
+                continue;
+            }
+            removeRow(orderNum, orderAmount);
+        }
+        window.location.reload();
     };
     const createRowTable = (order) => {
         const orderNum = order['orderNum'];
@@ -93,7 +155,7 @@ export function Cart() {
                 <td className="address">{orderAddress}</td>
                 <td>
                     <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
-                         onClick={() => removeRow(orderNum, orderAmount)}/>
+                         onClick={() => handlingRemoveRow(orderNum, orderAmount)}/>
                 </td>
             </tr>
         );
@@ -118,15 +180,16 @@ export function Cart() {
                             </tr>
                             </thead>
                             <tbody>
-                            {errorMessage}
                             {orders.map(order => (createRowTable(order)))}
                             </tbody>
                         </table>
                     </div>
                     <div id="total" className="container">
                         <h3>Итого: <span id="amount">{amount}</span> руб.</h3>
-                        <div className="button" onClick="handlingPay();">Оплатить</div>
+                        <div className="button" onClick={handlingPay}>Оплатить</div>
                     </div>
+                    <div className="error">{errorMessage}</div>
+                    <div className="success-text">{successMessage}</div>
                 </div>
             </div>
             <Footer/>
