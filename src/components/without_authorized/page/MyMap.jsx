@@ -54,9 +54,9 @@ export function MyMap() {
                                 {vendingPoints.map(vendingPoint => (createPlacemark(vendingPoint)))}
                             </div>
                         </Map>
+                        <div className="error">{errorMessage}</div>
                     </div>
                 </YMaps>
-                <div className="error">{errorMessage}</div>
             </div>
             <Footer/>
         </div>
