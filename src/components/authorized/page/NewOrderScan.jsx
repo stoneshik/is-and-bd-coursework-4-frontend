@@ -1,8 +1,46 @@
+import { useEffect, useState } from "react";
+import superagent from "superagent";
+import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
 
 
 export function NewOrderScan() {
+    const [errorMessage, setErrorMessage] = useState('');
+    const [vendingPoints, setVendingPoints] = useState([]);
+    useEffect(() => {
+        superagent
+            .get('/api/vending_point/get_scan')
+            .set('Content-Type', 'application/json')
+            .then((result) => {
+                    const responseVendingPoints = result.body;
+                    if (responseVendingPoints === undefined) {
+                        return false;
+                    }
+                    setErrorMessage('');
+                    setVendingPoints(responseVendingPoints);
+                    return true;
+                }
+            )
+            .catch((err) => {
+                    const responseMessage = err.response.body['responseMessage'];
+                    if (responseMessage === undefined) {
+                        return false;
+                    }
+                    setErrorMessage(responseMessage);
+                    return false;
+                }
+            );
+    }, []);
+    const createPlacemark = (vendingPoint) => {
+        const vendingPointCords = vendingPoint['vendingPointCords'];
+        const vendingPointAddress = vendingPoint['vendingPointAddress'];
+        if (vendingPointCords === undefined || vendingPointAddress === undefined) {
+            return;
+        }
+        return <Placemark modules={["geoObject.addon.balloon"]} defaultGeometry={vendingPointCords}
+                          properties={{balloonContent: "Адрес: " + vendingPointAddress,}}/>;
+    };
     return (
         <div>
             <Header/>
@@ -31,22 +69,18 @@ export function NewOrderScan() {
                             <input type="submit" value="Позже" id="pay_button_second" onClick="laterSubmit();"/>
                         </div>
                     </form>
-                    <div style={{position: 'relative', overflow: 'hidden'}} id="map">
-                        {/* eslint-disable-next-line react/style-prop-object */}
-                        <a href="https://yandex.ru/maps/2/saint-petersburg/?utm_medium=mapframe&utm_source=maps"
-                           style={{
-                               color: '#eee',
-                               fontSize: '12px',
-                               position: 'absolute',
-                               top: '0px'
-                           }}>Санкт‑Петербург</a><a
-                        href="https://yandex.ru/maps/2/saint-petersburg/?ll=30.315635%2C59.938951&utm_medium=mapframe&utm_source=maps&z=11"
-                        style={{color: '#eee', fontSize: '12px', position: 'absolute', top: '14px'}}>Карта
-                        Санкт-Петербурга с улицами и номерами домов — Яндекс Карты</a>
-                        <iframe src="https://yandex.ru/map-widget/v1/?ll=30.315635%2C59.938951&z=11" width="800"
-                                height="500" frameBorder="0" allowFullScreen="true" title="map"
-                                style={{position: 'relative'}}></iframe>
-                    </div>
+                    <YMaps>
+                        <div>
+                            <Map defaultState={{ center: [59.938678, 30.314474], zoom: 10,
+                                controls: ["zoomControl", "fullscreenControl"],}} width={800} height={500}
+                                 modules={["control.ZoomControl", "control.FullscreenControl"]}>
+                                <div>
+                                    {vendingPoints.map(vendingPoint => (createPlacemark(vendingPoint)))}
+                                </div>
+                            </Map>
+                            <div className="error">{errorMessage}</div>
+                        </div>
+                    </YMaps>
                 </div>
             </div>
             <Footer/>
