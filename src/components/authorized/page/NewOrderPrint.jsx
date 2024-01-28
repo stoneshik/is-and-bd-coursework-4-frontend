@@ -76,13 +76,12 @@ export function NewOrderPrint() {
                         <div id="files_list">
                         </div>
                         <div className="form-row">
-                            <input type="text" id="num-field" required autoComplete="off" onInput="inputField(this);"/>
+                            <input type="text" id="num-field" required autoComplete="off"/>
                             <label htmlFor="num-field" className="text-input-label">Количество копий печати:</label>
                         </div>
                         <div className="form-row" id="pay_button">
-                            <p>Оплатить <strong id="amount">0 руб.</strong></p>
-                            <input type="submit" value="Оплатить сейчас" id="pay_button_first" onClick="nowSubmit();"/>
-                            <input type="submit" value="В корзину" id="pay_button_second" onClick="laterSubmit();"/>
+                            <p>Сумма заказа: <strong id="amount">0 руб.</strong></p>
+                            <input type="submit" value="Добавить в корзину"/>
                         </div>
                     </form>
                     <YMaps>
