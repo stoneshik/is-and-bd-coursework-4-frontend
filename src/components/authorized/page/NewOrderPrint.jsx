@@ -41,9 +41,19 @@ export function NewOrderPrint() {
         return <Placemark modules={["geoObject.addon.balloon"]} defaultGeometry={vendingPointCords}
                           properties={{balloonContent: "Адрес: " + vendingPointAddress,}}/>;
     };
+    const createOptionAddress = (vendingPoint, index) => {
+        const vendingPointAddress = vendingPoint['vendingPointAddress'];
+        if (vendingPointAddress === undefined) {
+            return;
+        }
+        if (index === 0) {
+            return <option selected>{vendingPointAddress}</option>;
+        }
+        return <option>{vendingPointAddress}</option>;
+    };
     return (
         <div>
-            <Header/>
+        <Header/>
             <div id="wrapper" className="container">
                 <div id="new_order_wrapper" className="container">
                     <form action={"main"} className="ui-form main-form" id="new_order_form">
@@ -51,12 +61,7 @@ export function NewOrderPrint() {
                         <div className="form-row">
                             <label htmlFor="address">Выбор места:</label>
                             <select id="address" name="address" size="3" className="select">
-                                <option selected>Невский пр-кт, д. 1</option>
-                                <option>ул. Чайковского, д. 2</option>
-                                <option>ул. Шаврова, д. 3</option>
-                                <option>Невский пр-кт, д. 4</option>
-                                <option>ул. Чайковского, д. 5</option>
-                                <option>ул. Шаврова, д. 6</option>
+                                {vendingPoints.map((vendingPoint, index) => createOptionAddress(vendingPoint, index))}
                             </select>
                         </div>
                         <div className="form-row">
@@ -76,8 +81,8 @@ export function NewOrderPrint() {
                         </div>
                         <div className="form-row" id="pay_button">
                             <p>Оплатить <strong id="amount">0 руб.</strong></p>
-                            <input type="submit" value="Сейчас" id="pay_button_first" onClick="nowSubmit();"/>
-                            <input type="submit" value="Позже" id="pay_button_second" onClick="laterSubmit();"/>
+                            <input type="submit" value="Оплатить сейчас" id="pay_button_first" onClick="nowSubmit();"/>
+                            <input type="submit" value="В корзину" id="pay_button_second" onClick="laterSubmit();"/>
                         </div>
                     </form>
                     <YMaps>

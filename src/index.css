@@ -487,6 +487,7 @@ form .menu li {
 }
 #pay_button_first {
   width: 200px;
+  margin-right: 10px;
 }
 #pay_button_second {
   width: 100px;
