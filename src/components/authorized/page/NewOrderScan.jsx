@@ -16,7 +16,6 @@ export function NewOrderScan() {
     const [selectedVendingPoint, setSelectedVendingPoint] = useState({});
     const [numField, setNumField] = useState('');
     const [amount, setAmount] = useState(0);
-
     useEffect(() => {
         superagent
             .get('/api/vending_point/get_scan')
@@ -28,6 +27,7 @@ export function NewOrderScan() {
                     }
                     setErrorMessage('');
                     setVendingPoints(responseVendingPoints);
+                    setSelectedVendingPoint(responseVendingPoints[0]);
                     return true;
                 }
             )
@@ -56,7 +56,6 @@ export function NewOrderScan() {
             return;
         }
         if (index === 0) {
-            setSelectedVendingPoint(vendingPoint);
             return <option selected>{vendingPointAddress}</option>;
         }
         return <option>{vendingPointAddress}</option>;
@@ -72,9 +71,9 @@ export function NewOrderScan() {
     const changeHandlingNumField = (event) => {
         changeHandlingInputText(event, setNumField);
         const priceOnePage = 0.5;
-        const newAmount = Number(numField) * priceOnePage;
+        const newAmount = Number(event.target.value) * priceOnePage;
         setAmount(newAmount);
-    }
+    };
     const changeHandlingSelect = (event) => {
         const address = event.target.value;
         for (let i = 0; i < vendingPoints.length; i++) {
@@ -142,7 +141,7 @@ export function NewOrderScan() {
             <Header/>
             <div id="wrapper" className="container">
                 <div id="new_order_wrapper" className="container">
-                    <form className="ui-form main-form" id="new_order_form">
+                    <form className="ui-form main-form" id="new_order_form" onSubmit={formHandling}>
                         <h3>Заказ на сканирование</h3>
                         <div className="form-row">
                             <label htmlFor="address">Выбор места:</label>
@@ -154,7 +153,7 @@ export function NewOrderScan() {
                         <div className="form-row">
                             <input type="text" id="num_field" required autoComplete="off"
                                    name="num_field"
-                                   onChange={(e) => changeHandlingInputText(e, setNumField)}/>
+                                   onChange={(e) => changeHandlingNumField(e)}/>
                             <label htmlFor="num_field" className="text-input-label">Число страниц:</label>
                         </div>
                         <div className="form-row" id="pay_button">
