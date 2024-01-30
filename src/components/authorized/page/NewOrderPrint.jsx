@@ -15,7 +15,6 @@ export function NewOrderPrint() {
     const [numberCopiesField, setNumberCopiesField] = useState('');
     const [typeFunction, setTypeFunction] = useState('');
     const [amount, setAmount] = useState(0);
-    const [fieldset, setFieldset] = useState(null);
     useEffect(() => {
         superagent
             .get('/api/vending_point/get_print')
@@ -28,7 +27,7 @@ export function NewOrderPrint() {
                     setErrorMessage('');
                     setVendingPoints(responseVendingPoints);
                     setSelectedVendingPoint(responseVendingPoints[0]);
-                    setFieldset(createFieldSet(responseVendingPoints[0]));
+                    updateFunctionVariant(responseVendingPoints[0]);
                     return true;
                 }
             )
@@ -61,12 +60,15 @@ export function NewOrderPrint() {
         }
         return <option>{vendingPointAddress}</option>;
     };
-    const createFieldSet = (vendingPoint) => {
+    const updateFunctionVariant = (vendingPoint) => {
         const blackWhiteString = 'BLACK_WHITE_PRINT';
         const colorPrintString = 'COLOR_PRINT';
         let isHavingBlackWhite = false;
         let isHavingColor = false;
         const functionVariants = vendingPoint['functionVariants'];
+        if (functionVariants === undefined) {
+            return;
+        }
         for (let i = 0; i < functionVariants.length; i++) {
             const functionVariant = functionVariants[i];
             const functionVariantString = functionVariant['functionVariant'];
@@ -83,20 +85,26 @@ export function NewOrderPrint() {
         }
         if (isHavingBlackWhite && isHavingColor) {
             setTypeFunction('black_white_and_color');
+        } else if (isHavingBlackWhite) {
+            setTypeFunction('black_white');
+        } else if (isHavingColor) {
+            setTypeFunction('color');
+        }
+    };
+    const createFieldSet = (selectedTypeFunction) => {
+        if (selectedTypeFunction === 'black_white_and_color') {
             return (<fieldset id="type_all_files" className="custom-fieldset">
                 <label>Тип печати для всех файлов:</label>
                 <input type="radio" value="black_white" name="type" checked/>Черно-белая
                 <input type="radio" value="color" name="type"/>Цветная
                 <input type="radio" value="custom" name="type"/>Разное
             </fieldset>);
-        } else if (isHavingBlackWhite) {
-            setTypeFunction('black_white');
+        } else if (selectedTypeFunction === 'black_white') {
             return (<fieldset id="type_all_files" className="custom-fieldset">
                 <label>Тип печати для всех файлов:</label>
                 <input type="radio" value="black_white" name="type" checked/>Черно-белая
             </fieldset>);
-        } else if (isHavingColor) {
-            setTypeFunction('color');
+        } else if (selectedTypeFunction === 'color') {
             return (<fieldset id="type_all_files" className="custom-fieldset">
                 <label>Тип печати для всех файлов:</label>
                 <input type="radio" value="color" name="type" checked/>Цветная
@@ -110,7 +118,7 @@ export function NewOrderPrint() {
             const addressVendingPoint = vendingPoint['vendingPointAddress'];
             if (addressVendingPoint === address) {
                 setSelectedVendingPoint(vendingPoint);
-                setFieldset(createFieldSet(vendingPoint));
+                updateFunctionVariant(vendingPoint);
                 return;
             }
         }
@@ -143,7 +151,7 @@ export function NewOrderPrint() {
                         <div className="form-row">
                             <input type="file" multiple="multiple" onChange="fileUpload(this);" required/>
                         </div>
-                        {fieldset}
+                        {createFieldSet(typeFunction)}
                         <div id="files_list">
                         </div>
                         <div className="form-row">
