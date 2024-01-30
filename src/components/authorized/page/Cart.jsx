@@ -97,7 +97,7 @@ export function Cart() {
             if (orderNum === undefined) {
                 return [];
             }
-            for (let j = 0; j < handlingOrderNums.length; i++) {
+            for (let j = 0; j < handlingOrderNums.length; j++) {
                 const handlingOrderNum = handlingOrderNums[j];
                 if (String(orderNum) === String(handlingOrderNum)) {
                     handlingOrders.push(order);
