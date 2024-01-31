@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import {Link, useNavigate} from "react-router-dom";
 import superagent from "superagent";
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
-import { useNavigate } from "react-router-dom";
+import { getRandomInteger } from "../../../utils";
 
 
 export function NewOrderPrint() {
@@ -13,8 +14,10 @@ export function NewOrderPrint() {
     const [vendingPoints, setVendingPoints] = useState([]);
     const [selectedVendingPoint, setSelectedVendingPoint] = useState({});
     const [numberCopiesField, setNumberCopiesField] = useState('');
+    const [files, setFiles] = useState([]);
     const [typeFunction, setTypeFunction] = useState('');
     const [amount, setAmount] = useState(0);
+    const [updating, setUpdating] = useState(0);
     useEffect(() => {
         superagent
             .get('/api/vending_point/get_print')
@@ -134,9 +137,41 @@ export function NewOrderPrint() {
     const changeHandlingNumberCopiesField = (event) => {
         changeHandlingInputText(event, setNumberCopiesField);
     };
+    const fileUploadHandling = (event) => {
+        const newFiles = event.target.files;
+        if (newFiles === undefined) {
+            return;
+        }
+        files.push(...newFiles);
+        setUpdating(updating + 1);
+    };
+    const removeFileElement = (event, file) => {
+        for (let i = 0; i < files.length; i++) {
+            const fileIter = files[i];
+            if (file === fileIter) {
+                files.splice(i, 1);
+                setUpdating(updating + 1);
+                return;
+            }
+        }
+    };
+    const createFileElement = (file) => {
+        const fileNum = getRandomInteger(1, 10000000);
+        return (
+            <div className="form-row page-selection">
+                <Link to="#">{file.name}</Link>
+                <fieldset className="custom-fieldset">
+                    <input type="radio" value="black_white" name={"type-" + fileNum} checked />Ч/б
+                    <input type="radio" value="color" name={"type-" + fileNum} />Цветная
+                </fieldset>
+                <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                     onClick={(e) => removeFileElement(e, file)}/>
+            </div>
+        );
+    };
     return (
         <div>
-        <Header/>
+            <Header/>
             <div id="wrapper" className="container">
                 <div id="new_order_wrapper" className="container">
                     <form className="ui-form main-form" id="new_order_form">
@@ -149,10 +184,11 @@ export function NewOrderPrint() {
                             </select>
                         </div>
                         <div className="form-row">
-                            <input type="file" multiple="multiple" onChange="fileUpload(this);" required/>
+                            <input type="file" multiple="multiple" onChange={(e) => fileUploadHandling(e)} required/>
                         </div>
                         {createFieldSet(typeFunction)}
                         <div id="files_list">
+                            {files.map(file => createFileElement(file))}
                         </div>
                         <div className="form-row">
                             <input type="text" id="number_copies_field" required autoComplete="off"
@@ -174,7 +210,7 @@ export function NewOrderPrint() {
                                 controls: ["zoomControl", "fullscreenControl"],}} width={800} height={500}
                                  modules={["control.ZoomControl", "control.FullscreenControl"]}>
                                 <div>
-                                    {vendingPoints.map(vendingPoint => (createPlacemark(vendingPoint)))}
+                                    {vendingPoints.map(vendingPoint => createPlacemark(vendingPoint))}
                                 </div>
                             </Map>
                         </div>
