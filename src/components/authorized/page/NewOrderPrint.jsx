@@ -16,6 +16,7 @@ export function NewOrderPrint() {
     const [numberCopiesField, setNumberCopiesField] = useState('');
     const [files, setFiles] = useState([]);
     const [typeFunction, setTypeFunction] = useState('');
+    const [typeAllFiles, setTypeAllFiles] = useState('');
     const [amount, setAmount] = useState(0);
     const [updating, setUpdating] = useState(0);
     useEffect(() => {
@@ -88,29 +89,40 @@ export function NewOrderPrint() {
         }
         if (isHavingBlackWhite && isHavingColor) {
             setTypeFunction('black_white_and_color');
+            setTypeAllFiles('black_white');
         } else if (isHavingBlackWhite) {
             setTypeFunction('black_white');
+            setTypeAllFiles('black_white');
         } else if (isHavingColor) {
             setTypeFunction('color');
+            setTypeAllFiles('color');
         }
+    };
+    const handlingTypeAllFiles = (event) => {
+        const typeFiles = event.target.value;
+        if (typeFiles === undefined || (typeFiles !== 'black_white' && typeFiles !== 'color' && typeFiles !== 'custom')) {
+            return;
+        }
+        setTypeAllFiles(typeFiles);
     };
     const createFieldSet = (selectedTypeFunction) => {
         if (selectedTypeFunction === 'black_white_and_color') {
-            return (<fieldset id="type_all_files" className="custom-fieldset">
+            return (<fieldset id="type_all_files" className="custom-fieldset"
+                              onChange={(e) => handlingTypeAllFiles(e)}>
                 <label>Тип печати для всех файлов:</label>
-                <input type="radio" value="black_white" name="type" checked/>Черно-белая
-                <input type="radio" value="color" name="type"/>Цветная
-                <input type="radio" value="custom" name="type"/>Разное
+                <input type="radio" value="black_white" name="type_all_files" checked={typeAllFiles === 'black_white'}/>Черно-белая
+                <input type="radio" value="color" name="type_all_files" checked={typeAllFiles === 'color'}/>Цветная
+                <input type="radio" value="custom" name="type_all_files" checked={typeAllFiles === 'custom'}/>Разное
             </fieldset>);
         } else if (selectedTypeFunction === 'black_white') {
-            return (<fieldset id="type_all_files" className="custom-fieldset">
+            return (<fieldset id="type_all_files" className="custom-fieldset" onChange={(e) => handlingTypeAllFiles(e)}>
                 <label>Тип печати для всех файлов:</label>
-                <input type="radio" value="black_white" name="type" checked/>Черно-белая
+                <input type="radio" value="black_white" name="type_all_files" checked={typeAllFiles === 'black_white'}/>Черно-белая
             </fieldset>);
         } else if (selectedTypeFunction === 'color') {
-            return (<fieldset id="type_all_files" className="custom-fieldset">
+            return (<fieldset id="type_all_files" className="custom-fieldset" onChange={(e) => handlingTypeAllFiles(e)}>
                 <label>Тип печати для всех файлов:</label>
-                <input type="radio" value="color" name="type" checked/>Цветная
+                <input type="radio" value="color" name="type_all_files" checked={typeAllFiles === 'color'}/>Цветная
             </fieldset>);
         }
     };
