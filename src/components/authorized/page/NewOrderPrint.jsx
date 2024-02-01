@@ -104,6 +104,9 @@ export function NewOrderPrint() {
             return;
         }
         setTypeAllFiles(typePrint);
+        if (typePrint === 'custom') {
+            return;
+        }
         for (let numFile in files) {
             files[numFile].typePrint = typePrint;
         }
@@ -184,8 +187,9 @@ export function NewOrderPrint() {
         if (typeFile === undefined || (typeFile !== 'black_white' && typeFile !== 'color')) {
             return;
         }
-        files[fileNum].typePrint = typeFile;
         setTypeAllFiles('custom');
+        files[fileNum].typePrint = typeFile;
+        setUpdating(updating + 1);
     };
     const createFileElement = (fileNum) => {
         return (
@@ -193,9 +197,9 @@ export function NewOrderPrint() {
                 <Link to="#">{files[fileNum].file.name}</Link>
                 <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
                     <input type="radio" value="black_white" name={"type-" + fileNum}
-                           checked={typeAllFiles === 'black_white' || (typeAllFiles === 'custom' && files[fileNum].typePrint === 'black_white')}/>Ч/б
+                           checked={files[fileNum].typePrint === 'black_white'}/>Ч/б
                     <input type="radio" value="color" name={"type-" + fileNum}
-                           checked={typeAllFiles === 'color' || (typeAllFiles === 'custom' && files[fileNum].typePrint === 'color')}/>Цветная
+                           checked={files[fileNum].typePrint === 'color'}/>Цветная
                 </fieldset>
                 <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
                      onClick={() => removeFileElement(fileNum)}/>
