@@ -64,6 +64,11 @@ export function NewOrderPrint() {
         }
         return <option>{vendingPointAddress}</option>;
     };
+    const setSameTypePrintForAllFiles = (typePrint) => {
+        for (let numFile in files) {
+            files[numFile].typePrint = typePrint;
+        }
+    };
     const updateFunctionVariant = (vendingPoint) => {
         const blackWhiteString = 'BLACK_WHITE_PRINT';
         const colorPrintString = 'COLOR_PRINT';
@@ -87,16 +92,21 @@ export function NewOrderPrint() {
                 isHavingColor = true;
             }
         }
+        let typePrint;
         if (isHavingBlackWhite && isHavingColor) {
+            typePrint = 'black_white';
             setTypeFunction('black_white_and_color');
-            setTypeAllFiles('black_white');
+            setTypeAllFiles(typePrint);
         } else if (isHavingBlackWhite) {
+            typePrint = 'black_white';
             setTypeFunction('black_white');
-            setTypeAllFiles('black_white');
+            setTypeAllFiles(typePrint);
         } else if (isHavingColor) {
+            typePrint = 'color';
             setTypeFunction('color');
-            setTypeAllFiles('color');
+            setTypeAllFiles(typePrint);
         }
+        setSameTypePrintForAllFiles(typePrint);
     };
     const handlingTypeAllFiles = (event) => {
         const typePrint = event.target.value;
@@ -107,29 +117,36 @@ export function NewOrderPrint() {
         if (typePrint === 'custom') {
             return;
         }
-        for (let numFile in files) {
-            files[numFile].typePrint = typePrint;
-        }
+        setSameTypePrintForAllFiles(typePrint);
     };
     const createFieldSet = (selectedTypeFunction) => {
-        if (selectedTypeFunction === 'black_white_and_color') {
-            return (<fieldset id="type_all_files" className="custom-fieldset"
-                              onChange={(e) => handlingTypeAllFiles(e)}>
-                <label>Тип печати для всех файлов:</label>
-                <input type="radio" value="black_white" name="type_all_files" checked={typeAllFiles === 'black_white'}/>Черно-белая
-                <input type="radio" value="color" name="type_all_files" checked={typeAllFiles === 'color'}/>Цветная
-                <input type="radio" value="custom" name="type_all_files" checked={typeAllFiles === 'custom'}/>Разное
-            </fieldset>);
-        } else if (selectedTypeFunction === 'black_white') {
-            return (<fieldset id="type_all_files" className="custom-fieldset" onChange={(e) => handlingTypeAllFiles(e)}>
-                <label>Тип печати для всех файлов:</label>
-                <input type="radio" value="black_white" name="type_all_files" checked={typeAllFiles === 'black_white'}/>Черно-белая
-            </fieldset>);
-        } else if (selectedTypeFunction === 'color') {
-            return (<fieldset id="type_all_files" className="custom-fieldset" onChange={(e) => handlingTypeAllFiles(e)}>
-                <label>Тип печати для всех файлов:</label>
-                <input type="radio" value="color" name="type_all_files" checked={typeAllFiles === 'color'}/>Цветная
-            </fieldset>);
+        switch (selectedTypeFunction) {
+            case 'black_white_and_color' :
+                return (
+                    <fieldset id="type_all_files" className="custom-fieldset"
+                                  onChange={(e) => handlingTypeAllFiles(e)}>
+                        <label>Тип печати для всех файлов:</label>
+                        <input type="radio" value="black_white" name="type_all_files" checked={typeAllFiles === 'black_white'}/>Черно-белая
+                        <input type="radio" value="color" name="type_all_files" checked={typeAllFiles === 'color'}/>Цветная
+                        <input type="radio" value="custom" name="type_all_files" checked={typeAllFiles === 'custom'}/>Разное
+                    </fieldset>
+                );
+            case 'black_white':
+                return (
+                    <fieldset id="type_all_files" className="custom-fieldset" onChange={(e) => handlingTypeAllFiles(e)}>
+                        <label>Тип печати для всех файлов:</label>
+                        <input type="radio" value="black_white" name="type_all_files" checked={typeAllFiles === 'black_white'}/>Черно-белая
+                    </fieldset>
+                );
+            case 'color':
+                return (
+                    <fieldset id="type_all_files" className="custom-fieldset" onChange={(e) => handlingTypeAllFiles(e)}>
+                        <label>Тип печати для всех файлов:</label>
+                        <input type="radio" value="color" name="type_all_files" checked={typeAllFiles === 'color'}/>Цветная
+                    </fieldset>
+                );
+            default:
+                return;
         }
     };
     const changeHandlingSelect = (event) => {
@@ -192,19 +209,48 @@ export function NewOrderPrint() {
         setUpdating(updating + 1);
     };
     const createFileElement = (fileNum) => {
-        return (
-            <div className="form-row page-selection">
-                <Link to="#">{files[fileNum].file.name}</Link>
-                <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
-                    <input type="radio" value="black_white" name={"type-" + fileNum}
-                           checked={files[fileNum].typePrint === 'black_white'}/>Ч/б
-                    <input type="radio" value="color" name={"type-" + fileNum}
-                           checked={files[fileNum].typePrint === 'color'}/>Цветная
-                </fieldset>
-                <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
-                     onClick={() => removeFileElement(fileNum)}/>
-            </div>
-        );
+        switch (typeFunction) {
+            case 'black_white_and_color':
+                return (
+                    <div className="form-row page-selection">
+                        <Link to="#">{files[fileNum].file.name}</Link>
+                        <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
+                            <input type="radio" value="black_white" name={"type-" + fileNum}
+                                   checked={files[fileNum].typePrint === 'black_white'}/>Ч/б
+                            <input type="radio" value="color" name={"type-" + fileNum}
+                                   checked={files[fileNum].typePrint === 'color'}/>Цветная
+                        </fieldset>
+                        <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                             onClick={() => removeFileElement(fileNum)}/>
+                    </div>
+                );
+            case 'black_white':
+                return (
+                    <div className="form-row page-selection">
+                        <Link to="#">{files[fileNum].file.name}</Link>
+                        <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
+                            <input type="radio" value="black_white" name={"type-" + fileNum}
+                                   checked={files[fileNum].typePrint === 'black_white'}/>Ч/б
+                        </fieldset>
+                        <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                             onClick={() => removeFileElement(fileNum)}/>
+                    </div>
+                );
+            case 'color':
+                return (
+                    <div className="form-row page-selection">
+                        <Link to="#">{files[fileNum].file.name}</Link>
+                        <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
+                            <input type="radio" value="color" name={"type-" + fileNum}
+                                   checked={files[fileNum].typePrint === 'color'}/>Цветная
+                        </fieldset>
+                        <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                             onClick={() => removeFileElement(fileNum)}/>
+                    </div>
+                );
+            default:
+                return;
+        }
     };
     return (
         <div>
