@@ -14,8 +14,7 @@ export function NewOrderPrint() {
     const [vendingPoints, setVendingPoints] = useState([]);
     const [selectedVendingPoint, setSelectedVendingPoint] = useState({});
     const [numberCopiesField, setNumberCopiesField] = useState('');
-    const [files, setFiles] = useState([]);
-    const [filesWithType, setFilesWithType] = useState({});
+    const [files, setFiles] = useState({});
     const [typeFunction, setTypeFunction] = useState('');
     const [typeAllFiles, setTypeAllFiles] = useState('');
     const [amount, setAmount] = useState(0);
@@ -100,11 +99,14 @@ export function NewOrderPrint() {
         }
     };
     const handlingTypeAllFiles = (event) => {
-        const typeFiles = event.target.value;
-        if (typeFiles === undefined || (typeFiles !== 'black_white' && typeFiles !== 'color' && typeFiles !== 'custom')) {
+        const typePrint = event.target.value;
+        if (typePrint === undefined || (typePrint !== 'black_white' && typePrint !== 'color' && typePrint !== 'custom')) {
             return;
         }
-        setTypeAllFiles(typeFiles);
+        setTypeAllFiles(typePrint);
+        for (let numFile in files) {
+            files[numFile].typePrint = typePrint;
+        }
     };
     const createFieldSet = (selectedTypeFunction) => {
         if (selectedTypeFunction === 'black_white_and_color') {
@@ -150,51 +152,53 @@ export function NewOrderPrint() {
     const changeHandlingNumberCopiesField = (event) => {
         changeHandlingInputText(event, setNumberCopiesField);
     };
+    const createNewFile = (newFile) => {
+        let fileNum;
+        do {
+            fileNum = String(getRandomInteger(1, 10000000));
+        } while (fileNum in files);
+        files[fileNum] = {file: newFile, typePrint: ''};
+        if (typeAllFiles === 'custom') {
+            files[fileNum].typePrint = 'black_white';
+        } else {
+            files[fileNum].typePrint = typeAllFiles;
+        }
+    };
     const fileUploadHandling = (event) => {
         const newFiles = event.target.files;
         if (newFiles === undefined) {
             return;
         }
-        files.push(...newFiles);
+        for (let i = 0; i < newFiles.length; i++) {
+            const newFile = newFiles[i];
+            createNewFile(newFile);
+        }
         setUpdating(updating + 1);
     };
-    const removeFileElement = (event, file) => {
-        for (let i = 0; i < files.length; i++) {
-            const fileIter = files[i];
-            if (file === fileIter) {
-                files.splice(i, 1);
-                setUpdating(updating + 1);
-                return;
-            }
-        }
+    const removeFileElement = (fileNum) => {
+        delete files[fileNum];
+        setUpdating(updating + 1);
     };
     const updateTypeFileElement = (event, fileNum) => {
-        const typeFiles = event.target.value;
-        if (typeFiles === undefined || (typeFiles !== 'black_white' && typeFiles !== 'color')) {
+        const typeFile = event.target.value;
+        if (typeFile === undefined || (typeFile !== 'black_white' && typeFile !== 'color')) {
             return;
         }
-        filesWithType[fileNum] = typeFiles;
+        files[fileNum].typePrint = typeFile;
         setTypeAllFiles('custom');
     };
-    const createFileElement = (file) => {
-        let fileNum;
-        do {
-            fileNum = String(getRandomInteger(1, 10000000));
-        } while (fileNum in filesWithType);
-        if (typeAllFiles === 'custom' && filesWithType[fileNum] === undefined) {
-            filesWithType[fileNum] = 'black_white';
-        } else {
-            filesWithType[fileNum] = typeAllFiles;
-        }
+    const createFileElement = (fileNum) => {
         return (
             <div className="form-row page-selection">
-                <Link to="#">{file.name}</Link>
+                <Link to="#">{files[fileNum].file.name}</Link>
                 <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
-                    <input type="radio" value="black_white" name={"type-" + fileNum} checked={filesWithType[fileNum] === 'black_white'}/>Ч/б
-                    <input type="radio" value="color" name={"type-" + fileNum} checked={filesWithType[fileNum] === 'color'}/>Цветная
+                    <input type="radio" value="black_white" name={"type-" + fileNum}
+                           checked={typeAllFiles === 'black_white' || (typeAllFiles === 'custom' && files[fileNum].typePrint === 'black_white')}/>Ч/б
+                    <input type="radio" value="color" name={"type-" + fileNum}
+                           checked={typeAllFiles === 'color' || (typeAllFiles === 'custom' && files[fileNum].typePrint === 'color')}/>Цветная
                 </fieldset>
                 <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
-                     onClick={(e) => removeFileElement(e, file)}/>
+                     onClick={() => removeFileElement(fileNum)}/>
             </div>
         );
     };
@@ -217,7 +221,7 @@ export function NewOrderPrint() {
                         </div>
                         {createFieldSet(typeFunction)}
                         <div id="files_list">
-                            {files.map(file => createFileElement(file))}
+                            {Object.keys(files).map((fileNum) => createFileElement(fileNum))}
                         </div>
                         <div className="form-row">
                             <input type="text" id="number_copies_field" required autoComplete="off"
