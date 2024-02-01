@@ -15,6 +15,7 @@ export function NewOrderPrint() {
     const [selectedVendingPoint, setSelectedVendingPoint] = useState({});
     const [numberCopiesField, setNumberCopiesField] = useState('');
     const [files, setFiles] = useState([]);
+    const [filesWithType, setFilesWithType] = useState({});
     const [typeFunction, setTypeFunction] = useState('');
     const [typeAllFiles, setTypeAllFiles] = useState('');
     const [amount, setAmount] = useState(0);
@@ -167,14 +168,30 @@ export function NewOrderPrint() {
             }
         }
     };
+    const updateTypeFileElement = (event, fileNum) => {
+        const typeFiles = event.target.value;
+        if (typeFiles === undefined || (typeFiles !== 'black_white' && typeFiles !== 'color')) {
+            return;
+        }
+        filesWithType[fileNum] = typeFiles;
+        setTypeAllFiles('custom');
+    };
     const createFileElement = (file) => {
-        const fileNum = getRandomInteger(1, 10000000);
+        let fileNum;
+        do {
+            fileNum = String(getRandomInteger(1, 10000000));
+        } while (fileNum in filesWithType);
+        if (typeAllFiles === 'custom' && filesWithType[fileNum] === undefined) {
+            filesWithType[fileNum] = 'black_white';
+        } else {
+            filesWithType[fileNum] = typeAllFiles;
+        }
         return (
             <div className="form-row page-selection">
                 <Link to="#">{file.name}</Link>
-                <fieldset className="custom-fieldset">
-                    <input type="radio" value="black_white" name={"type-" + fileNum} checked />Ч/б
-                    <input type="radio" value="color" name={"type-" + fileNum} />Цветная
+                <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
+                    <input type="radio" value="black_white" name={"type-" + fileNum} checked={filesWithType[fileNum] === 'black_white'}/>Ч/б
+                    <input type="radio" value="color" name={"type-" + fileNum} checked={filesWithType[fileNum] === 'color'}/>Цветная
                 </fieldset>
                 <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
                      onClick={(e) => removeFileElement(e, file)}/>
