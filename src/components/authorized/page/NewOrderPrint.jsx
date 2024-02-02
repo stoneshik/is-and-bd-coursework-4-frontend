@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import superagent from "superagent";
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 import { Header } from "../header/Header";
 import { Footer } from "../footer/Footer";
 import { getRandomInteger } from "../../../utils";
+import { responseMessageHandlerForFormError, responseMessageHandlerForFormResult } from "../../../responseHandlers";
 
 
 export function NewOrderPrint() {
@@ -45,6 +46,72 @@ export function NewOrderPrint() {
                 }
             );
     }, []);
+    const validateForm = async () => {
+        if (!selectedVendingPoint || selectedVendingPoint === {}) {
+            setErrorMessage('Выберите адрес');
+            return false;
+        }
+        if (numberCopiesField === '') {
+            setErrorMessage('Введите количество страниц');
+            return false;
+        }
+        const numberCopies = Number(numberCopiesField);
+        if (isNaN(numberCopies)) {
+            setErrorMessage('Должно быть введено число');
+            return false;
+        }
+        if (numberCopies < 0) {
+            setErrorMessage('Число должно быть положительным');
+            return false;
+        }
+        if (!Number.isInteger(numberCopies)) {
+            setErrorMessage('Введенное число должно быть целочисленным');
+            return false;
+        }
+        let isValid = false;
+        const vendingPointId = selectedVendingPoint['vendingPointId'];
+        if (vendingPointId === undefined) {
+            setErrorMessage('Что-то пошло не так перезагрузите страницу...');
+            return false;
+        }
+        const filesForSending = [];
+        for (const [numFile, fileObj] of Object.entries(files)) {
+            const buffer = await fileObj.file.arrayBuffer();
+            const bufferByteLength = buffer.byteLength;
+            const bufferUint8Array = new Uint8Array(buffer, 0, bufferByteLength);
+            filesForSending.push(
+                JSON.stringify(
+                    {"file": bufferUint8Array, "typePrint": fileObj.typePrint, "numberCopies": numberCopies}
+                )
+            );
+        }
+        await superagent
+            .post('/api/order/create/print_order')
+            .send(
+                JSON.stringify(
+                {"vendingPointId": vendingPointId, "files": filesForSending}
+                )
+            )
+            .set('Content-Type', 'application/json')
+            .then(
+                (result) => {
+                    isValid = responseMessageHandlerForFormResult(result, setErrorMessage, setSuccessMessage);
+                }
+            )
+            .catch(
+                (err) => {
+                    isValid = responseMessageHandlerForFormError(err, setErrorMessage, setSuccessMessage);
+                }
+            );
+        return isValid;
+    };
+    const formHandling = async (event) => {
+        event.preventDefault();
+        if (!await validateForm()) {
+            return false;
+        }
+        setTimeout(() => navigate('/main'), 1000);
+    };
     const createPlacemark = (vendingPoint) => {
         const vendingPointCords = vendingPoint['vendingPointCords'];
         const vendingPointAddress = vendingPoint['vendingPointAddress'];
@@ -262,7 +329,7 @@ export function NewOrderPrint() {
             <Header/>
             <div id="wrapper" className="container">
                 <div id="new_order_wrapper" className="container">
-                    <form className="ui-form main-form" id="new_order_form">
+                    <form className="ui-form main-form" id="new_order_form" onSubmit={formHandling}>
                         <h3>Заказ на печать</h3>
                         <div className="form-row">
                             <label htmlFor="address">Выбор места:</label>
