@@ -133,14 +133,16 @@ export function NewOrderPrint() {
                 );
             case 'black_white':
                 return (
-                    <fieldset id="type_all_files" className="custom-fieldset" onChange={(e) => handlingTypeAllFiles(e)}>
+                    <fieldset id="type_all_files" className="custom-fieldset"
+                              onChange={(e) => handlingTypeAllFiles(e)}>
                         <label>Тип печати для всех файлов:</label>
                         <input type="radio" value="black_white" name="type_all_files" checked={typeAllFiles === 'black_white'}/>Черно-белая
                     </fieldset>
                 );
             case 'color':
                 return (
-                    <fieldset id="type_all_files" className="custom-fieldset" onChange={(e) => handlingTypeAllFiles(e)}>
+                    <fieldset id="type_all_files" className="custom-fieldset"
+                              onChange={(e) => handlingTypeAllFiles(e)}>
                         <label>Тип печати для всех файлов:</label>
                         <input type="radio" value="color" name="type_all_files" checked={typeAllFiles === 'color'}/>Цветная
                     </fieldset>
@@ -214,7 +216,8 @@ export function NewOrderPrint() {
                 return (
                     <div className="form-row page-selection">
                         <Link to="#">{files[fileNum].file.name}</Link>
-                        <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
+                        <fieldset className="custom-fieldset"
+                                  onChange={(e) => updateTypeFileElement(e, fileNum)}>
                             <input type="radio" value="black_white" name={"type-" + fileNum}
                                    checked={files[fileNum].typePrint === 'black_white'}/>Ч/б
                             <input type="radio" value="color" name={"type-" + fileNum}
@@ -228,7 +231,8 @@ export function NewOrderPrint() {
                 return (
                     <div className="form-row page-selection">
                         <Link to="#">{files[fileNum].file.name}</Link>
-                        <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
+                        <fieldset className="custom-fieldset"
+                                  onChange={(e) => updateTypeFileElement(e, fileNum)}>
                             <input type="radio" value="black_white" name={"type-" + fileNum}
                                    checked={files[fileNum].typePrint === 'black_white'}/>Ч/б
                         </fieldset>
@@ -240,7 +244,8 @@ export function NewOrderPrint() {
                 return (
                     <div className="form-row page-selection">
                         <Link to="#">{files[fileNum].file.name}</Link>
-                        <fieldset className="custom-fieldset" onChange={(e) => updateTypeFileElement(e, fileNum)}>
+                        <fieldset className="custom-fieldset"
+                                  onChange={(e) => updateTypeFileElement(e, fileNum)}>
                             <input type="radio" value="color" name={"type-" + fileNum}
                                    checked={files[fileNum].typePrint === 'color'}/>Цветная
                         </fieldset>
@@ -267,7 +272,9 @@ export function NewOrderPrint() {
                             </select>
                         </div>
                         <div className="form-row">
-                            <input type="file" multiple="multiple" onChange={(e) => fileUploadHandling(e)} required/>
+                            <input type="file" multiple="multiple"
+                                   onChange={(e) => fileUploadHandling(e)}
+                                   required/>
                         </div>
                         {createFieldSet(typeFunction)}
                         <div id="files_list">
