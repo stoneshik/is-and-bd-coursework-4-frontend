@@ -80,9 +80,7 @@ export function NewOrderPrint() {
             const bufferByteLength = buffer.byteLength;
             const bufferUint8Array = new Uint8Array(buffer, 0, bufferByteLength);
             filesForSending.push(
-                JSON.stringify(
-                    {"file": bufferUint8Array, "typePrint": fileObj.typePrint, "numberCopies": numberCopies}
-                )
+                {"file": bufferUint8Array, "typePrint": fileObj.typePrint, "numberCopies": numberCopies}
             );
         }
         await superagent
