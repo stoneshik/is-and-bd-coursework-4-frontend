@@ -75,7 +75,7 @@ export function Cart() {
                 }
             )
             .catch((err) => {
-                    isValid =responseMessageHandlerForFormError(err, setErrorMessage, setSuccessMessage);
+                    isValid = responseMessageHandlerForFormError(err, setErrorMessage, setSuccessMessage);
                 }
             );
         if (!isValid) {
@@ -157,6 +157,7 @@ export function Cart() {
             return;
         }
         const orderTypeString = (orderType === 'PRINT')? 'печать': 'сканирование';
+        const orderLinkString = (orderType === 'PRINT')? '/order_print/': '/order_scan/';
         if (checkedOrders[orderNum] === undefined) {
             checkedOrders[orderNum] = false;
         }
@@ -165,7 +166,7 @@ export function Cart() {
                 <td><input type="checkbox" autoComplete="off"
                            onChange={() => {updateChecked(orderNum, orderAmount)}}/></td>
                 <td className="num">
-                    <Link to={"/order_print/" + orderNum} title="Подробнее о заказе">{orderNum}</Link>
+                    <Link to={orderLinkString + orderId} title="Подробнее о заказе">{orderNum}</Link>
                 </td>
                 <td>{orderTypeString}</td>
                 <td>{orderDate}</td>

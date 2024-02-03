@@ -27,8 +27,8 @@ export function App() {
             <Route path="/map" element={<MyMap/>}/>
             <Route path="/new_order_print" element={<NewOrderPrint/>}/>
             <Route path="/new_order_scan" element={<NewOrderScan/>}/>
-            <Route path="/order_print" element={<OrderPrint/>}/>
-            <Route path="/order_scan" element={<OrderScan/>}/>
+            <Route path="/order_print/:id" element={<OrderPrint/>}/>
+            <Route path="/order_scan/:id" element={<OrderScan/>}/>
             <Route path="/cart" element={<Cart/>}/>
             <Route path="/files" element={<Files/>}/>
         </Routes>
