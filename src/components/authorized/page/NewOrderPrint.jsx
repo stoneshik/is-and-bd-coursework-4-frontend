@@ -18,8 +18,9 @@ export function NewOrderPrint() {
     const [files, setFiles] = useState({});
     const [typeFunction, setTypeFunction] = useState('');
     const [typeAllFiles, setTypeAllFiles] = useState('');
-    const [amount, setAmount] = useState(0);
     const [updating, setUpdating] = useState(0);
+    const PAGE_PRICE_FOR_BLACK_WHITE = 7.0;
+    const PAGE_PRICE_FOR_COLOR = 15.0;
     useEffect(() => {
         superagent
             .get('/api/vending_point/get_print')
@@ -74,6 +75,9 @@ export function NewOrderPrint() {
             setErrorMessage('Что-то пошло не так перезагрузите страницу...');
             return false;
         }
+        if (!checkAllFiles()) {
+            return false;
+        }
         const tasksPrint = [];
         for (const [numFile, fileObj] of Object.entries(files)) {
             const file = fileObj.file;
@@ -116,6 +120,23 @@ export function NewOrderPrint() {
             return false;
         }
         setTimeout(() => navigate('/main'), 1000);
+    };
+    const checkAllFiles = () => {
+        const MIME_IMAGE_JPEG = "image/jpeg";
+        const MIME_IMAGE_PNG = "image/png";
+        const maxSize = 10485760; // 10 мб в байтах
+        for (const [numFile, fileObj] of Object.entries(files)) {
+            const file = fileObj.file;
+            if (file.type !== MIME_IMAGE_JPEG && file.type !== MIME_IMAGE_PNG) {
+                setErrorMessage('Загружен файл неправильного типа (допустимые форматы - jpeg, png)');
+                return false;
+            }
+            if (file.size > maxSize) {
+                setErrorMessage('Загружен файл превышающий размер в 10 мб');
+                return false;
+            }
+        }
+        return true;
     };
     const createPlacemark = (vendingPoint) => {
         const vendingPointCords = vendingPoint['vendingPointCords'];
@@ -282,6 +303,27 @@ export function NewOrderPrint() {
         files[fileNum].typePrint = typeFile;
         setUpdating(updating + 1);
     };
+    const calcAmount = (files) => {
+        let newAmount = 0;
+        for (const [fileNum, fileObj] of Object.entries(files)) {
+            if (files[fileNum].typePrint === 'black_white') {
+                newAmount = newAmount + PAGE_PRICE_FOR_BLACK_WHITE;
+            } else {
+                newAmount = newAmount + PAGE_PRICE_FOR_COLOR;
+            }
+        }
+        const numberCopies = Number(numberCopiesField);
+        if (isNaN(numberCopies)) {
+            return 0;
+        }
+        if (numberCopies < 0) {
+            return 0;
+        }
+        if (!Number.isInteger(numberCopies)) {
+            return 0;
+        }
+        return newAmount * numberCopies;
+    };
     const createFileElement = (fileNum) => {
         switch (typeFunction) {
             case 'black_white_and_color':
@@ -359,7 +401,7 @@ export function NewOrderPrint() {
                             <label htmlFor="number_copies_field" className="text-input-label">Количество копий печати:</label>
                         </div>
                         <div className="form-row" id="pay_button">
-                            <p>Сумма заказа: <strong id="amount">{amount} руб.</strong></p>
+                            <p>Сумма заказа: <strong id="amount">{calcAmount(files)} руб.</strong></p>
                             <input type="submit" value="Добавить в корзину"/>
                         </div>
                         <div className="error">{errorMessage}</div>
