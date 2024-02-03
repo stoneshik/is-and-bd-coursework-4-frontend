@@ -69,8 +69,6 @@ export function Header() {
                             <ul>
                                 <li><Link id="login" to="#">{errorMessage}{login}</Link></li>
                                 <li><Link to="#">{errorMessage}{balance} руб.</Link></li>
-                                <li><Link to="#">пополнить счет</Link></li>
-                                <li><Link to="/personal_account">личный кабинет</Link></li>
                                 <li><Link to="#" onClick={logout}>выйти</Link></li>
                             </ul>
                         </div>
