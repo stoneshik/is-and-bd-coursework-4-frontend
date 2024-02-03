@@ -74,20 +74,27 @@ export function NewOrderPrint() {
             setErrorMessage('Что-то пошло не так перезагрузите страницу...');
             return false;
         }
-        const filesForSending = [];
+        const tasksPrint = [];
         for (const [numFile, fileObj] of Object.entries(files)) {
-            const buffer = await fileObj.file.arrayBuffer();
+            const file = fileObj.file;
+            const buffer = await file.arrayBuffer();
             const bufferByteLength = buffer.byteLength;
-            const bufferUint8Array = new Uint8Array(buffer, 0, bufferByteLength);
-            filesForSending.push(
-                {"file": bufferUint8Array, "typePrint": fileObj.typePrint, "numberCopies": numberCopies}
+            const bufferUint8Array = Array.from(new Uint8Array(buffer, 0, bufferByteLength));
+            tasksPrint.push(
+                {
+                    "name": file.name,
+                    "type": file.type,
+                    "blob": bufferUint8Array,
+                    "typePrint": fileObj.typePrint,
+                    "numberCopies": numberCopies
+                }
             );
         }
         await superagent
             .post('/api/order/create/print_order')
             .send(
                 JSON.stringify(
-                {"vendingPointId": vendingPointId, "files": filesForSending}
+                {"vendingPointId": vendingPointId, "tasksPrint": tasksPrint}
                 )
             )
             .set('Content-Type', 'application/json')
