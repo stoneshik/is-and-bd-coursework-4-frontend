@@ -337,6 +337,7 @@ form .menu li {
   z-index: 5;
 }
 #hamburger ul li {
+  min-width: 115px;
   display: block;
   margin: 0;
   padding: 10px;
