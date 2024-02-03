@@ -110,14 +110,14 @@ export function OrderPrint() {
                         <h3>Общая информация о заказе</h3>
                         <table>
                             <thead>
-                                <tr>
-                                    <th>Номер заказа</th>
-                                    <th>Тип заказа</th>
-                                    <th>Статус</th>
-                                    <th>Дата заказа</th>
-                                    <th>Сумма заказа</th>
-                                    <th>Адрес</th>
-                                </tr>
+                            <tr>
+                                <th>Номер заказа</th>
+                                <th>Тип заказа</th>
+                                <th>Статус</th>
+                                <th>Дата заказа</th>
+                                <th>Сумма заказа</th>
+                                <th>Адрес</th>
+                            </tr>
                             </thead>
                             <tbody>
                             {createOrderRow(orderInfo)}
@@ -130,8 +130,8 @@ export function OrderPrint() {
                             {filesInfo.map(fileInfo => createFileElement(fileInfo))}
                         </div>
                     </div>
+                    <div className="error">{errorMessage}</div>
                 </div>
-                <div className="error">{errorMessage}</div>
             </div>
             <Footer/>
         </div>
