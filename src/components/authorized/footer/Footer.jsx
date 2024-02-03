@@ -25,8 +25,8 @@ export function Footer() {
             <div className="column">
                 <h3>Наши соцсети</h3>
                 <ul className="menu">
-                    <li><Link to="#"><img src={"./img/VK_Compact_Logo_(2021-present).svg.webp"} alt="vk" /></Link></li>
-                    <li><Link to="#"><img src={"./img/Telegram_2019_Logo.svg.png"} alt="telegram" /></Link></li>
+                    <li><Link to="#"><img src={"/img/VK_Compact_Logo_(2021-present).svg.webp"} alt="vk" /></Link></li>
+                    <li><Link to="#"><img src={"/img/Telegram_2019_Logo.svg.png"} alt="telegram" /></Link></li>
                 </ul>
                 <h4>Email: info@typofast.ru</h4>
             </div>

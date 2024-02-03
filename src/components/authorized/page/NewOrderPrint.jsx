@@ -337,7 +337,7 @@ export function NewOrderPrint() {
                             <input type="radio" value="color" name={"type-" + fileNum}
                                    checked={files[fileNum].typePrint === 'color'}/>Цветная
                         </fieldset>
-                        <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                        <img src={"/img/cross.png"} alt="cross" style={{width: "24px"}}
                              onClick={() => removeFileElement(fileNum)}/>
                     </div>
                 );
@@ -350,7 +350,7 @@ export function NewOrderPrint() {
                             <input type="radio" value="black_white" name={"type-" + fileNum}
                                    checked={files[fileNum].typePrint === 'black_white'}/>Ч/б
                         </fieldset>
-                        <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                        <img src={"/img/cross.png"} alt="cross" style={{width: "24px"}}
                              onClick={() => removeFileElement(fileNum)}/>
                     </div>
                 );
@@ -363,7 +363,7 @@ export function NewOrderPrint() {
                             <input type="radio" value="color" name={"type-" + fileNum}
                                    checked={files[fileNum].typePrint === 'color'}/>Цветная
                         </fieldset>
-                        <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                        <img src={"/img/cross.png"} alt="cross" style={{width: "24px"}}
                              onClick={() => removeFileElement(fileNum)}/>
                     </div>
                 );

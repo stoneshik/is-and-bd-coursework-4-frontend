@@ -92,7 +92,7 @@ export function Home() {
                 <td>{orderAmount} руб.</td>
                 <td className="address">{orderAddress}</td>
                 <td>
-                    <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                    <img src={"/img/cross.png"} alt="cross" style={{width: "24px"}}
                          onClick={() => removeRow(orderNum, orderId)}/>
                 </td>
             </tr>
@@ -128,13 +128,13 @@ export function Home() {
                         <div className="container double-column">
                             <NavLink className="new-order-wrapper" to="/new_order_print">
                                 <div className="new-order">
-                                    <img src={"./img/printer.png"} alt="printer"/>
+                                    <img src={"/img/printer.png"} alt="printer"/>
                                     <h3>Заказ на печать</h3>
                                 </div>
                             </NavLink>
                             <NavLink className="new-order-wrapper" to="/new_order_scan">
                                 <div className="new-order">
-                                    <img src={"./img/scanner.png"} alt="scanner"/>
+                                    <img src={"/img/scanner.png"} alt="scanner"/>
                                     <h3>Заказ на сканирование</h3>
                                 </div>
                             </NavLink>

@@ -173,7 +173,7 @@ export function Cart() {
                 <td>{orderAmount} руб.</td>
                 <td className="address">{orderAddress}</td>
                 <td>
-                    <img src={"./img/cross.png"} alt="cross" style={{width: "24px"}}
+                    <img src={"/img/cross.png"} alt="cross" style={{width: "24px"}}
                          onClick={() => handlingRemoveRow(orderNum, orderAmount, orderId)}/>
                 </td>
             </tr>

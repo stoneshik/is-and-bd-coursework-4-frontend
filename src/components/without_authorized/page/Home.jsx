@@ -27,15 +27,15 @@ export function Home() {
                         <h2>Наши преимущества</h2>
                         <div className="container">
                             <div className="advantage">
-                                <img src={"./img/speed.png"} alt="speed"/>
+                                <img src={"/img/speed.png"} alt="speed"/>
                                 <h3>Скорость</h3>
                             </div>
                             <div className="advantage">
-                                <img src={"./img/click.png"} alt="click"/>
+                                <img src={"/img/click.png"} alt="click"/>
                                 <h3>Оформление заказа<br/>в пару кликов</h3>
                             </div>
                             <div className="advantage">
-                                <img src={"./img/discount.png"} alt="discount"/>
+                                <img src={"/img/discount.png"} alt="discount"/>
                                 <h3>Низкая цена</h3>
                             </div>
                         </div>
