@@ -15,6 +15,7 @@ import { Cart } from "./components/authorized/page/Cart";
 import { Files } from "./components/authorized/page/Files";
 import { FileSaving } from "./components/authorized/page/FileSaving";
 import { Replenishes } from "./components/authorized/page/Replenishes";
+import { NewReplenish } from "./components/authorized/page/NewReplenish";
 
 export function App() {
     return (
@@ -35,6 +36,7 @@ export function App() {
             <Route path="/files" element={<Files/>}/>
             <Route path="/file/:id" element={<FileSaving/>}/>
             <Route path="/replenishes" element={<Replenishes/>}/>
+            <Route path="/new_replenish" element={<NewReplenish/>}/>
         </Routes>
     );
 }
