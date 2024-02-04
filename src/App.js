@@ -13,6 +13,7 @@ import { OrderPrint } from "./components/authorized/page/OrderPrint";
 import { OrderScan } from "./components/authorized/page/OrderScan";
 import { Cart } from "./components/authorized/page/Cart";
 import { Files } from "./components/authorized/page/Files";
+import { FileSaving } from "./components/authorized/page/FileSaving";
 
 export function App() {
     return (
@@ -31,6 +32,7 @@ export function App() {
             <Route path="/order_scan/:id" element={<OrderScan/>}/>
             <Route path="/cart" element={<Cart/>}/>
             <Route path="/files" element={<Files/>}/>
+            <Route path="/file/:id" element={<FileSaving/>}/>
         </Routes>
     );
 }
