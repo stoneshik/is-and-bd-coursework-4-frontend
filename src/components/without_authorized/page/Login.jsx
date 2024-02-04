@@ -73,7 +73,7 @@ export function Login() {
         if (!await validateForm()) {
             return false;
         }
-        navigate('/main');
+        setTimeout(() => navigate('/main'), 1000);
     };
     return (
         <div>
