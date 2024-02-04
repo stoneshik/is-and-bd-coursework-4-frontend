@@ -14,6 +14,7 @@ import { OrderScan } from "./components/authorized/page/OrderScan";
 import { Cart } from "./components/authorized/page/Cart";
 import { Files } from "./components/authorized/page/Files";
 import { FileSaving } from "./components/authorized/page/FileSaving";
+import { Replenishes } from "./components/authorized/page/Replenishes";
 
 export function App() {
     return (
@@ -33,6 +34,7 @@ export function App() {
             <Route path="/cart" element={<Cart/>}/>
             <Route path="/files" element={<Files/>}/>
             <Route path="/file/:id" element={<FileSaving/>}/>
+            <Route path="/replenishes" element={<Replenishes/>}/>
         </Routes>
     );
 }
